@@ -1,6 +1,5 @@
-// Initialisation et configuration
-document.addEventListener('DOMContentLoaded', async () => {
-    // Ajouter au début du code existant
+
+ocument.addEventListener('DOMContentLoaded', async () => {
     const currentTab = localStorage.getItem('searchTab') || 'web';
     document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.dataset.type === currentTab) btn.classList.add('active');
@@ -283,7 +282,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         resultsContainer.appendChild(imageGrid);
     }
 
-    // Renommer la fonction existante de rendu des résultats web
     function renderWebResults(filtered) {
         const resultsWrapper = document.createElement('div');
         resultsWrapper.className = 'results-wrapper';
@@ -291,7 +289,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         paginatedResults.forEach((item, idx) => {
             const div = document.createElement('div');
             div.className = 'result-item';
-            // Animation d'apparition progressive façon Copilot/Apple
             div.style.animationDelay = (idx * 0.06) + 's';
 
             // Image principale
@@ -317,11 +314,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${catHtml}
                 </div>
             `;
-            // Ajout progressif pour animation
             setTimeout(() => resultsWrapper.appendChild(div), idx * 60);
         });
 
-        // Vider le conteneur et ajouter les résultats
         resultsContainer.innerHTML = '';
         resultsContainer.appendChild(resultsWrapper);
         renderPagination();
