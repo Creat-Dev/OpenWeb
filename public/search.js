@@ -1,5 +1,4 @@
-
-ocument.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const currentTab = localStorage.getItem('searchTab') || 'web';
     document.querySelectorAll('.tab-btn').forEach(btn => {
         if (btn.dataset.type === currentTab) btn.classList.add('active');
@@ -22,7 +21,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
     const query = params.get('q') || '';
     const page = parseInt(params.get('page')) || 1;
-    const resultsPerPage = 50; // Modification: 50 résultats par page
+    const resultsPerPage = 50;
     const resultsContainer = document.getElementById('results');
     const loader = document.getElementById('loader');
     const searchInput = document.getElementById('searchInput');
@@ -40,7 +39,6 @@ ocument.addEventListener('DOMContentLoaded', async () => {
 
     loader.style.display = 'block';
 
-    // Récupération des résultats (simulation de fetch local)
     let data = [];
     try {
         const res = await fetch('/searchData.json');
@@ -55,7 +53,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Ajouter les fonctions de sécurité
+
     const securityChecks = {
         isDarkWebDomain: (url) => {
             const darkwebPatterns = ['.onion', '.i2p', 'darknet', 'hidden'];
@@ -87,7 +85,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // Recherche simple (insensible à la casse dans titre/desc/contenu)
+
     const q = query.trim().toLowerCase();
     const filtered = data.filter(item => {
         // Vérifications de sécurité
@@ -103,12 +101,12 @@ ocument.addEventListener('DOMContentLoaded', async () => {
                item.content?.toLowerCase().includes(q);
     });
 
-    // Pagination des résultats
+
     const start = (page - 1) * resultsPerPage;
     const paginatedResults = filtered.slice(start, start + resultsPerPage);
     const totalPages = Math.ceil(filtered.length / resultsPerPage);
 
-    // Simplifier la fonction renderPagination
+
     const renderPagination = () => {
         const paginationDiv = document.createElement('div');
         paginationDiv.className = 'pagination-container';
@@ -121,7 +119,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
         const paginationNav = document.createElement('div');
         paginationNav.className = 'pagination';
 
-        // Bouton précédent
+
         if (page > 1) {
             const prevBtn = document.createElement('a');
             prevBtn.href = `/search.html?q=${encodeURIComponent(query)}&page=${page - 1}`;
@@ -130,7 +128,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
             paginationNav.appendChild(prevBtn);
         }
 
-        // Pages
+
         for (let i = 1; i <= totalPages; i++) {
             if (i === 1 || i === totalPages || (i >= page - 2 && i <= page + 2)) {
                 const pageBtn = document.createElement('a');
@@ -146,7 +144,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Bouton suivant
+
         if (page < totalPages) {
             const nextBtn = document.createElement('a');
             nextBtn.href = `/search.html?q=${encodeURIComponent(query)}&page=${page + 1}`;
@@ -166,7 +164,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Afficher les résultats initiaux selon l'onglet actif
+
     if (currentTab === 'images') {
         renderImageResults(filtered);
     } else {
@@ -220,7 +218,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
         document.body.appendChild(modal);
         document.body.appendChild(overlay);
 
-        // Gestionnaires d'événements de la modal
+
         const closeModal = () => {
             modal.classList.remove('active');
             document.body.style.overflow = '';
@@ -229,7 +227,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
         modal.querySelector('.modal-close').onclick = closeModal;
         overlay.onclick = closeModal;
 
-        // Mise à jour de l'ouverture de la modal
+
         const openModal = (item, idx) => {
             const modalImg = modal.querySelector('.modal-image');
             const modalTitle = modal.querySelector('.modal-title');
@@ -238,7 +236,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
             modalImg.alt = item.title;
             modalTitle.textContent = item.title;
             
-            // Animation des images similaires
+
             const similarImages = imageResults
                 .filter(img => img !== item)
                 .sort(() => 0.5 - Math.random())
@@ -282,6 +280,7 @@ ocument.addEventListener('DOMContentLoaded', async () => {
         resultsContainer.appendChild(imageGrid);
     }
 
+
     function renderWebResults(filtered) {
         const resultsWrapper = document.createElement('div');
         resultsWrapper.className = 'results-wrapper';
@@ -289,15 +288,16 @@ ocument.addEventListener('DOMContentLoaded', async () => {
         paginatedResults.forEach((item, idx) => {
             const div = document.createElement('div');
             div.className = 'result-item';
+
             div.style.animationDelay = (idx * 0.06) + 's';
 
-            // Image principale
+
             let imgHtml = '';
             if (item.image) {
                 imgHtml = `<img class="result-image" src="${item.image}" alt="Image" loading="lazy" onerror="this.hidden=true">`;
             }
 
-            // Catégories
+
             let catHtml = '';
             if (item.categories && item.categories.length) {
                 catHtml = `<div class="result-categories">${item.categories.map(cat =>
@@ -314,8 +314,10 @@ ocument.addEventListener('DOMContentLoaded', async () => {
                     ${catHtml}
                 </div>
             `;
+
             setTimeout(() => resultsWrapper.appendChild(div), idx * 60);
         });
+
 
         resultsContainer.innerHTML = '';
         resultsContainer.appendChild(resultsWrapper);
